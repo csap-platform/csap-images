@@ -1,0 +1,5 @@
+template dockerPoms: 'registry/pom.xml',
+    enableParentVersion: true,
+    enableVersion: true,
+    enableTag: true,
+    defaultTag: 'csap-registry'

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.csap</groupId>
+	<artifactId>csap-images-parent</artifactId>
+	<version>2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>csap-images</name>
+
+
+	<properties>
+
+		<!--  desktop testing only
+		<docker.host>http://csap-dev03.lab.sensus.net:4243</docker.host>-->
+		
+		<docker.push>sensus-docker.lab.sensus.net</docker.push>
+		<docker.pull>docker.lab.sensus.net</docker.pull>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.34.1</version>
+					<executions>
+						<execution>
+							<id>save</id>
+							<phase>package</phase>
+							<goals>
+								<goal>build</goal>
+								<goal>save</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>start</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>start</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>stop</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>remove</id>
+							<phase>clean</phase>
+							<goals>
+								<goal>remove</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>push</id>
+							<phase>deploy</phase>
+							<goals>
+								<goal>push</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+					<executions>
+						<execution>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-help-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-scm-plugin</artifactId>
+					<version>1.11.1</version>
+					<configuration>
+						<tag>${project.artifactId}-${project.version}</tag>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<scm>
+		<connection>scm:git:ssh://git@moc-bb.lab.sensus.net:7999/csap/csap-images.git</connection>
+	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>csap-release-repo</id>
+			<url>${csapReleaseUrl}</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>csap-snapshot-repo</id>
+			<url>${csapSnapUrl}</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

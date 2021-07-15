@@ -1,0 +1,9 @@
+template dockerPoms: 'image_tar/pom.xml', 
+    enableParentVersion: true,
+    enableVersion: true,
+    enableTag: true,
+    defaultTag: 'csap-images-tar',
+    extraParams: [
+        string(name: 'registry-version', defaultValue: params['registry-version']?:'', description: 'csap-registry version'),
+        string(name: 'registry-deploy-version', defaultValue: params['registry-deploy-version']?:'', description: 'csap-deploy version')
+    ]

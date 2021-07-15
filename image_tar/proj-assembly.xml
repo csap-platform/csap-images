@@ -1,0 +1,29 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+
+  <id>bin</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <fileSet>
+      <outputDirectory>installer</outputDirectory>
+      <directory>${basedir}/target</directory>
+      <fileMode>0644</fileMode>
+      <includes>
+        <!--include>${image-tar-filename}</include-->
+        <include>platform_images.tar.gz</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+      <dependencySet>
+          <outputDirectory>installer</outputDirectory>
+          <useProjectArtifact>false</useProjectArtifact>
+          <unpack>true</unpack>
+          <scope>runtime</scope>
+      </dependencySet>
+  </dependencySets>
+</assembly>

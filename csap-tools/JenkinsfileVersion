@@ -1,0 +1,4 @@
+template dockerPoms: 'csap-tools/pom.xml', enableParentVersion: true,
+    enableVersion: true,
+    enableTag: true,
+    defaultTag: 'csap-images-tools'

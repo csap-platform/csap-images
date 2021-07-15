@@ -1,0 +1,2 @@
+template dockerPoms: 'csap-java/pom.xml', enableParentVersion: true
+

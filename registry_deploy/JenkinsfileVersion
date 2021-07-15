@@ -1,0 +1,6 @@
+template dockerPoms: 'registry_deploy/pom.xml',
+    enableParentVersion: true,
+    enableVersion: true,
+    enableTag: true,
+    defaultTag: 'csap-images-registry-deploy'
+

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <parent>
+       <groupId>org.csap</groupId>
+       <artifactId>csap-images-parent</artifactId>
+       <version>2-SNAPSHOT</version>
+    </parent>
+
+  <packaging>pom</packaging>
+  <artifactId>csap-registry</artifactId>
+  <version>2-SNAPSHOT</version>
+
+  <properties>
+     <registry-name>csap/registry:${project.version}</registry-name>
+     <registry-filename>registry-${project.version}.tar.gz</registry-filename>
+     <docker.save.name>${registry-name}</docker.save.name>
+     <docker.save.file>${basedir}/target/to_package/${registry-filename}</docker.save.file>
+     <docker.run.log>${project.basedir}/target/run.log</docker.run.log>
+  </properties>
+ 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId> 
+        <configuration>
+          <images>
+              <image>
+                  <name>${registry-name}</name>
+                  <alias>registry</alias>
+                  <build>
+                      <dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
+                  </build>
+                  <run>
+                      <ports>
+                         <port>5111:5000</port>
+                      </ports>
+                      <wait>
+                         <!--exit>0</exit-->
+                         <!-- have to wait a while or image will time out after 60 seconds -->
+                         <time>60000</time>
+                         <log>listening on</log>
+                         <!--shutdown>500</shutdown-->
+                     </wait>
+                      <log>
+                         <enabled>true</enabled>
+                         <color>cyan</color>
+                         <file>${docker.run.log}</file>
+                      </log>
+                  </run>
+              </image>
+          </images>
+       </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>make-bundles</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>proj-assembly.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <executable>${project.basedir}/tests/test_runner.sh</executable>
+          <arguments>
+            <argument>${docker.run.log}</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

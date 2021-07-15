@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <parent>
+       <groupId>org.csap</groupId>
+       <artifactId>csap-images-parent</artifactId>
+       <version>2-SNAPSHOT</version>
+    </parent>
+
+  <packaging>pom</packaging>
+  <artifactId>csap-image-tar</artifactId>
+  <version>2-SNAPSHOT</version>
+
+  <properties>
+     <registry-version>2-SNAPSHOT</registry-version>
+     <registry-deploy-version>2-SNAPSHOT</registry-deploy-version>
+
+     <image-builder-name>csap/image-builder:${project.version}</image-builder-name>
+     <image-builder-filename>image_builder-${project.version}.tar.gz</image-builder-filename>
+     <image-tar-filename>platform_images-${revision}.tar.gz</image-tar-filename>
+     <docker.save.name>${image-builder-name}</docker.save.name>
+     <docker.save.file>${basedir}/target/${image-builder-filename}</docker.save.file>
+     <docker.run.log>${project.basedir}/target/run.log</docker.run.log>
+     <docker.skip.tag>true</docker.skip.tag>
+     <docker.skip.push>true</docker.skip.push>
+  </properties>
+ 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId> 
+        <executions combine.self="override">  
+           <execution>  
+             <id>start</id>  
+             <phase>package</phase>  
+             <goals>  
+               <goal>start</goal>  
+             </goals>  
+           </execution>  
+           <execution>  
+             <id>stop</id>  
+             <phase>package</phase>  
+             <goals>  
+               <goal>stop</goal>  
+               <goal>remove</goal>  
+             </goals>  
+           </execution>  
+        </executions>
+        <configuration>
+          <images>
+              <image>
+                  <name>${image-builder-name}</name>
+                  <alias>image-builder</alias>
+                  <build>
+                      <dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
+                  </build>
+                  <run>
+                      <env>
+                          <DOCKER_IMAGES_NAME>${image-tar-filename}</DOCKER_IMAGES_NAME>
+                      </env>
+                     <volumes>
+                        <bind>
+                           <namingStrategy>image_builder</namingStrategy>
+                           <volume>${basedir}:/var/config</volume>
+                           <volume>${basedir}/target:/var/images</volume>
+                        </bind>
+                      </volumes>
+                      <wait>
+                         <!--exit>0</exit-->
+                         <!-- have to wait a while or image will time out after 100 seconds -->
+                         <time>2000000</time>
+                         <log>CREATED IMAGE TAR</log>
+                         <shutdown>500</shutdown>
+                     </wait>
+                      <log>
+                         <enabled>true</enabled>
+                         <color>cyan</color>
+                         <file>${docker.run.log}</file>
+                      </log>
+                  </run>
+              </image>
+          </images>
+       </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>make-bundles</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>proj-assembly.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>csap-registry</artifactId>
+      <version>${registry-version}</version>
+      <type>tar.gz</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>csap-registry-deploy</artifactId>
+      <version>${registry-deploy-version}</version>
+      <type>tar.gz</type>
+    </dependency>
+  </dependencies>
+
+</project>

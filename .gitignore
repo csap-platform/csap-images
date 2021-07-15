@@ -1,0 +1,7 @@
+/target/
+/.*.md.html
+.project
+.settings
+**/.project
+**/.settings
+**/target

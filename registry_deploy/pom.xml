@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <parent>
+       <groupId>org.csap</groupId>
+       <artifactId>csap-images-parent</artifactId>
+       <version>2-SNAPSHOT</version>
+    </parent>
+
+  <artifactId>csap-registry-deploy</artifactId>
+  <packaging>pom</packaging>
+  <version>2-SNAPSHOT</version>
+
+  <properties>
+    <registry-deploy-name>csap/registry-deploy:${project.version}</registry-deploy-name>
+    <registry-deploy-filename>registry_deploy-${project.version}.tar.gz</registry-deploy-filename>
+
+     <docker.save.name>${registry-deploy-name}</docker.save.name>
+     <docker.save.file>${basedir}/target/to_package/${registry-deploy-filename}</docker.save.file>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId> 
+        <configuration>
+          <images>
+              <image>
+                  <name>${registry-deploy-name}</name>
+                  <alias>registry_deploy</alias>
+                  <build>
+                      <dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
+                  </build>
+              </image>
+          </images>
+       </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>make-bundles</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>proj-assembly.xml</descriptor>
+              </descriptors>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
