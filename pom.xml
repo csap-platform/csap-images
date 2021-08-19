@@ -14,8 +14,8 @@
 
 	<properties>
 
-		<!--  desktop testing only
-		<docker.host>http://csap-dev03.lab.sensus.net:4243</docker.host>-->
+		<!--  desktop testing only 
+		<docker.host>http://csap-dev03.lab.sensus.net:4243</docker.host> -->
 		
 		<docker.push>sensus-docker.lab.sensus.net</docker.push>
 		<docker.pull>docker.lab.sensus.net</docker.pull>
@@ -27,7 +27,7 @@
 				<plugin>
 					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
-					<version>0.34.1</version>
+					<version>0.36.1</version>
 					<executions>
 						<execution>
 							<id>save</id>

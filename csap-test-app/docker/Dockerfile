@@ -1,11 +1,11 @@
-FROM csap/csap-java:11.0.4.x
+FROM csap/csap-java:11.0.9
+# 11.0.9
 
+#ARG jarVersion="2-SNAPSHOT"
+#ARG jarType="csap-snapshots"
 
-ARG jarVersion="2-SNAPSHOT"
-ARG jarType="csap-snapshots"
-
-#ARG jarVersion="2.3.2.2"
-#ARG jarType="csap-release"
+ARG jarVersion="2.5.2.1"
+ARG jarType="csap-release"
 
 
 ARG jarName="csap-starter-tester-$jarVersion.jar"
@@ -24,8 +24,9 @@ EXPOSE 7080
 #
 
 ENV jarVersion="$jarVersion"
-ENV javaOptions="-Dcsap.security.enabled=false -Dserver.servlet.context-path=/ -Xms257M -Xmx257M -Dspring.profiles.active=services-embedded -Dserver.port=7080"
+ENV javaOptions="-Dcsap.security.enabled=false -Dserver.servlet.context-path=/ -Xms256M -Xmx256M -Dspring.profiles.active=CSAP_LIFE,services-embedded,company -DcsapJmxPort=7086 -Dserver.port=7080"
 ENV javaTarget="-jar $jarName"
+
 
 
 #FROM csap/csap-java
