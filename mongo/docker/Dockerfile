@@ -1,6 +1,6 @@
-#FROM mongo:4.2.12
+
 FROM mongo:4.4.4
-#FROM mongo:4.2.2
+#FROM mongo:4.2.12
 
 
 RUN echo xxx
